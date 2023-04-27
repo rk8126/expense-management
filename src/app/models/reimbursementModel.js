@@ -1,34 +1,9 @@
-# expense-management
+const mongoose = require('mongoose');
+const { REIMBURSEMENT_STATUS } = require('../utils/const');
 
-# employee-details
-const employeeDetails = {
-  name: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  manager: {
-    type: ObjectId,
-    ref: 'Employee'
-  },
-  isDeleted: {
-    type: Boolean,
-    default: false
-  }
-};
-
-# reimbursement-details
-const reimbursementDetails = {
+const reimbursementSchema = new mongoose.Schema({
     employee: {
-        type: ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Employee',
         required: true
     },
@@ -54,15 +29,17 @@ const reimbursementDetails = {
     },
     status: {
         type: String,
-        enum: ["paid", "unpaid"],
-        default: "unpaid"
+        enum: Object.values(REIMBURSEMENT_STATUS),
+        default: REIMBURSEMENT_STATUS.unpaid
     },
     approver: {
-        type: ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Employee'
     },
     expenseProof: {
         type: String,
         required: true
     }
-};
+}, {timestamps: true});
+
+module.exports = mongoose.model('Reimbursement', reimbursementSchema);
